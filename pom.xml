@@ -6,16 +6,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>2.7.12</version>
     </parent>
 
     <groupId>priv.stone.demo</groupId>
     <artifactId>spring-services</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
     
     <properties>
         <java.version>11</java.version>
     </properties>
+
+    <modules>
+        <module>hello-provider-boot</module>
+    </modules>
 
     <dependencies>
         <!-- 添加您所需的依赖 -->

@@ -10,8 +10,8 @@
 
     <artifactId>hello-provider-boot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-services</name>
-    <description>Demo project for Spring Cloud</description>
+    <name>hello-provider-boot</name>
+    <description>hello-provider-boot</description>
 
     <dependencies>
         <dependency>
