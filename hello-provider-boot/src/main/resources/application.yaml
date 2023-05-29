@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 30000
 
 spring:
   application:
@@ -7,7 +7,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.186.135:8848
+        server-addr: nacos-headless:8848
         enabled: true
         instance-enable: true
       username: nacos
