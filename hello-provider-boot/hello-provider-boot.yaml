@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-provider-boot-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-provider-boot
+  template:
+    metadata:
+      labels:
+        app: hello-provider-boot
+    spec:
+      containers:
+        - name: hello-provider-boot
+          image: registry.cn-hangzhou.aliyuncs.com/zhpouen/hello-provider-boot:v1
+          ports:
+            - containerPort: 30000
+          env:
+            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
+              value: nacos-headless:8848
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-provider-boot-service
+spec:
+  selector:
+    app: hello-provider-boot
+  ports:
+    - name: http
+      protocol: TCP
+      port: 30000
+      targetPort: 30000
+  type: ClusterIP
