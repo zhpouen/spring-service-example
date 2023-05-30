@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hello-consumer-boot
-          image: zhpouen/hello-consumer-boot:v1
+          image: hello-consumer-boot:latest
           ports:
             - containerPort: 30001
           env:
