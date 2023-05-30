@@ -1,4 +1,4 @@
-package priv.stone.demo.springservices;
+package priv.stone.demo.springservices.helloprovider;
 
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import org.springframework.http.HttpStatus;
