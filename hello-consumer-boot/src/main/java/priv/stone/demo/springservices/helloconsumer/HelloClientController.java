@@ -14,12 +14,12 @@ public class HelloClientController {
 
     @GetMapping("/echo/{string}")
     public String echo(@PathVariable String string) {
-        return helloService.echo(string);
+        return "consumer ==> " + helloService.echo(string);
     }
 
     @GetMapping("/divide")
     public String divide(@RequestParam Integer a, @RequestParam Integer b) {
-        return helloService.divide(a, b);
+        return "consumer ==> " + helloService.divide(a, b);
     }
 
 }

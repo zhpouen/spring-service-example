@@ -1,0 +1,45 @@
+server:
+  port: 30002
+
+
+spring:
+  application:
+    name: hello-gateway-boot
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-headless:8848
+        enabled: true
+        instance-enable: true
+      username: nacos
+      password: nacos
+    gateway:
+      routes:
+        - id: hello-consumer
+          uri: lb://hello-consumer-boot
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - StripPrefix=1
+        - id: hello-provider
+          uri: lb://hello-provider-boot
+          predicates:
+            - Path=/provider/**
+          filters:
+            - StripPrefix=1
+
+management:
+    endpoints:
+        web:
+        exposure:
+            include: '*'
+    endpoint:
+      health:
+        show-details: ALWAYS
+
+logging:
+  level:
+    root: debug
+    org.springframework.cloud.gateway: debug
+    org.springframework.cloud.gateway.route: debug
+
