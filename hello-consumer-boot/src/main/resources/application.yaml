@@ -1,0 +1,24 @@
+server:
+  port: 30001
+
+spring:
+  application:
+    name: hello-consumer-boot
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-headless:8848
+        enabled: true
+        instance-enable: true
+      username: nacos
+      password: nacos
+
+management:
+    endpoints:
+        web:
+        exposure:
+            include: '*'
+    endpoint:
+      health:
+        show-details: ALWAYS
+

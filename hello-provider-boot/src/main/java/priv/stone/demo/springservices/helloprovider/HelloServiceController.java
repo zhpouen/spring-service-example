@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 @RestController
-public class HelloController {
+public class HelloServiceController {
     @Resource
     private NacosDiscoveryProperties nacosDiscoveryProperties;
 
