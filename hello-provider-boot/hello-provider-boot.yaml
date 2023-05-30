@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hello-provider-boot
-          image: hello-provider-boot:latest
+          image: hello-provider-boot:v1
           ports:
             - containerPort: 30000
           env:
