@@ -1,13 +1,41 @@
 package priv.stone.demo.springservices.helloprovider;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
-@SpringBootTest
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+//@SpringBootTest
 class SpringServicesApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void testConcurrentRequests() throws InterruptedException {
+		String baseUrl = "http://localhost:8080/api/v1/namespaces/default/services/hello-provider-boot-service:30000/proxy/echo/helloProvider";
+		int numThreads = 1;
+		int numRequestsPerThread = 10;
+
+		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+
+		for (int i = 0; i < numThreads; i++) {
+			executorService.submit(() -> {
+				for (int j = 0; j < numRequestsPerThread; j++) {
+					makeRequest(baseUrl);
+				}
+			});
+		}
+
+		executorService.shutdown();
+		executorService.awaitTermination(10, TimeUnit.SECONDS);
+	}
+
+	private void makeRequest(String url) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		System.out.println("Response status: " + response.getStatusCode());
+		System.out.println("Response body: " + response.getBody());
 	}
 
 }
