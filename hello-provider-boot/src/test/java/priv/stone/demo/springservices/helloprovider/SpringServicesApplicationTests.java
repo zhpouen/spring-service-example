@@ -1,5 +1,6 @@
 package priv.stone.demo.springservices.helloprovider;
 
+import com.alibaba.nacos.client.naming.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +15,7 @@ class SpringServicesApplicationTests {
 	@Test
 	public void testConcurrentRequests() throws InterruptedException {
 		String baseUrl = "http://localhost:8080/api/v1/namespaces/default/services/hello-provider-boot-service:30000/proxy/echo/helloProvider";
-		int numThreads = 1;
+		int numThreads = 20;
 		int numRequestsPerThread = 10;
 
 		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
@@ -22,7 +23,7 @@ class SpringServicesApplicationTests {
 		for (int i = 0; i < numThreads; i++) {
 			executorService.submit(() -> {
 				for (int j = 0; j < numRequestsPerThread; j++) {
-					makeRequest(baseUrl);
+					makeRequest(baseUrl + RandomUtils.nextInt(10000));
 				}
 			});
 		}

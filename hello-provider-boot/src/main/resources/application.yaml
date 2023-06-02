@@ -12,6 +12,15 @@ spring:
         instance-enable: true
       username: nacos
       password: nacos
+    sentinel:
+      datasource:
+        dsl:
+          nacos:
+            server-addr: nacos-headless:8848
+            dataId: ${spring.application.name}-flow-rules
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
 
 management:
     endpoints:

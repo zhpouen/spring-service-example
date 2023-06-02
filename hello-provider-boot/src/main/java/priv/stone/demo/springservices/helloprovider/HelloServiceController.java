@@ -3,9 +3,6 @@ package priv.stone.demo.springservices.helloprovider;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,25 +18,25 @@ public class HelloServiceController {
     @Resource
     private NacosDiscoveryProperties nacosDiscoveryProperties;
 
-    @PostConstruct
-    private void init() {
-        List<FlowRule> rules = new ArrayList<>();
-        // 创建流控规则并配置
-        FlowRule rule1 = new FlowRule();
-        rule1.setResource("/echo/{string}");
-        rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        rule1.setCount(10);
-        rules.add(rule1);
-
-        FlowRule rule2 = new FlowRule();
-        rule2.setResource("/divide");
-        rule2.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        rule2.setCount(5);
-        rules.add(rule2);
-
-        // 将规则加载到 Sentinel 的规则管理器中
-        FlowRuleManager.loadRules(rules);
-    }
+//    @PostConstruct
+//    private void init() {
+//        List<FlowRule> rules = new ArrayList<>();
+//        // 创建流控规则并配置
+//        FlowRule rule1 = new FlowRule();
+//        rule1.setResource("/echo/{string}");
+//        rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
+//        rule1.setCount(10);
+//        rules.add(rule1);
+//
+//        FlowRule rule2 = new FlowRule();
+//        rule2.setResource("/divide");
+//        rule2.setGrade(RuleConstant.FLOW_GRADE_QPS);
+//        rule2.setCount(5);
+//        rules.add(rule2);
+//
+//        // 将规则加载到 Sentinel 的规则管理器中
+//        FlowRuleManager.loadRules(rules);
+//    }
 
     private String handleEchoBlock(String string, BlockException ex) {
         return "Blocked for echo: " + string;
