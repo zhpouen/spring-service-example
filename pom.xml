@@ -26,6 +26,7 @@
         <module>hello-provider-api</module>
         <module>hello-consumer-boot</module>
         <module>hello-gateway-boot</module>
+        <module>hello-flowserver-boot</module>
     </modules>
 
     <dependencyManagement>
