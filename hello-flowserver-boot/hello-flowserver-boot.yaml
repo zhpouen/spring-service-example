@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-flowserver-boot-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-flowserver-boot
+  template:
+    metadata:
+      labels:
+        app: hello-flowserver-boot
+    spec:
+      containers:
+        - name: hello-flowserver-boot
+          image: hello-flowserver-boot:v1
+          ports:
+            - containerPort: 8719
+          env:
+            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
+              value: nacos-headless:8848
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-flowserver-boot-service
+spec:
+  selector:
+    app: hello-flowserver-boot
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8719
+      targetPort: 8719
+  type: ClusterIP
