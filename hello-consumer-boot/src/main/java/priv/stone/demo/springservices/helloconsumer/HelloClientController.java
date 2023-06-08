@@ -1,5 +1,7 @@
 package priv.stone.demo.springservices.helloconsumer;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,12 +14,22 @@ public class HelloClientController {
     @Autowired
     private HelloService helloService;
 
+    private String handleEchoBlock(String string, BlockException ex) {
+        return "Consumer Blocked for echo: " + string;
+    }
+
+    private String handleDivideBlock(Integer a, Integer b, BlockException ex) {
+        return "Consumer Blocked for divide: " + a + " / " + b;
+    }
+
     @GetMapping("/echo/{string}")
+    @SentinelResource(value = "echo", blockHandler = "handleEchoBlock")
     public String echo(@PathVariable String string) {
         return "consumer ==> " + helloService.echo(string);
     }
 
     @GetMapping("/divide")
+    @SentinelResource(value = "divide", blockHandler = "handleDivideBlock")
     public String divide(@RequestParam Integer a, @RequestParam Integer b) {
         return "consumer ==> " + helloService.divide(a, b);
     }

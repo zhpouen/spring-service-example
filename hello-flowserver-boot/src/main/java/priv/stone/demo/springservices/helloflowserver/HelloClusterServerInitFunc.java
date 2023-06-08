@@ -1,14 +1,12 @@
 package priv.stone.demo.springservices.helloflowserver;
 
 import com.alibaba.csp.sentinel.cluster.flow.rule.ClusterFlowRuleManager;
-import com.alibaba.csp.sentinel.cluster.flow.rule.ClusterParamFlowRuleManager;
 import com.alibaba.csp.sentinel.cluster.server.config.ClusterServerConfigManager;
 import com.alibaba.csp.sentinel.cluster.server.config.ServerTransportConfig;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.nacos.NacosDataSource;
 import com.alibaba.csp.sentinel.init.InitFunc;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
@@ -17,7 +15,7 @@ import java.util.Set;
 
 public class HelloClusterServerInitFunc implements InitFunc {
     private static final String FLOW_POSTFIX = "-flow-rules";
-    private static final String PARAM_FLOW_POSTFIX = "-param-rules";
+//    private static final String PARAM_FLOW_POSTFIX = "-param-rules";
     private final String remoteAddress = "nacos-headless:8848";
     private final String groupId = "SENTINEL_GROUP";
     private final String namespaceSetDataId = "hello-cluster-server-namespace-set";

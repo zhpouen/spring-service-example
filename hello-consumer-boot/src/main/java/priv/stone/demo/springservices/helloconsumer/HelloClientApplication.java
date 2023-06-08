@@ -1,5 +1,6 @@
 package priv.stone.demo.springservices.helloconsumer;
 
+import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -11,6 +12,11 @@ import priv.stone.demo.springservices.helloprovider.api.HelloService;
 @EnableDiscoveryClient
 @EnableFeignClients(clients = HelloService.class)
 public class HelloClientApplication {
+
+    @Bean
+    public SentinelResourceAspect sentinelResourceAspect() {
+        return new SentinelResourceAspect();
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(HelloClientApplication.class, args);
