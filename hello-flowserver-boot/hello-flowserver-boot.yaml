@@ -16,7 +16,7 @@ spec:
         - name: hello-flowserver-boot
           image: hello-flowserver-boot:v1
           ports:
-            - containerPort: 8719
+            - containerPort: 30003
           env:
             - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
               value: nacos-headless:8848
@@ -32,6 +32,6 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 8719
-      targetPort: 8719
+      port: 30003
+      targetPort: 30003
   type: ClusterIP
