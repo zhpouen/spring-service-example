@@ -11,9 +11,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
-import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 public class HelloClusterClientInitFunc implements InitFunc {
     private final String remoteAddress = "nacos-headless:8848";
