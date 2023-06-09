@@ -15,7 +15,7 @@ class SpringServicesApplicationTests {
 	@Test
 	public void testConcurrentRequests() throws InterruptedException {
 		String baseUrl = "http://localhost:8080/api/v1/namespaces/default/services/hello-consumer-boot-service:30001/proxy/echo/helloProvider";
-		int numThreads = 20;
+		int numThreads = 50;
 		int numRequestsPerThread = 10;
 
 		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
