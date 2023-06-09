@@ -15,6 +15,13 @@
  */
 package priv.stone.demo.springservices.hellogateway;
 
+import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
+import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
+import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.cluster.client.config.ClusterClientAssignConfig;
@@ -34,7 +41,9 @@ import org.springframework.web.reactive.result.view.ViewResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Eric Zhao
@@ -75,14 +84,49 @@ public class ClusterFlowRuleConfiguration {
 
     @PostConstruct
     public void doInit() {
-//        initCustomizedApis();
-//        initGatewayRules();
+        initCustomizedApis();
+        initGatewayRules();
 
         // Register token client related data source.
         // Token client common config:
         initClientConfigProperty();
         // Token client assign config (e.g. target token server) retrieved from assign map:
         initClientServerAssignProperty();
+    }
+
+    private void initCustomizedApis() {
+        Set<ApiDefinition> definitions = new HashSet<>();
+        ApiDefinition api1 = new ApiDefinition("echo_api")
+                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
+                    add(new ApiPathPredicateItem().setPattern("/provider/echo/**")
+                            .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
+                    add(new ApiPathPredicateItem().setPattern("/consumer/echo/**")
+                            .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
+                }});
+        ApiDefinition api2 = new ApiDefinition("divide_api")
+                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
+                    add(new ApiPathPredicateItem().setPattern("/provider/divide"));
+                    add(new ApiPathPredicateItem().setPattern("/consumer/divide"));
+                }});
+        definitions.add(api1);
+        definitions.add(api2);
+        GatewayApiDefinitionManager.loadApiDefinitions(definitions);
+    }
+
+    private void initGatewayRules() {
+        Set<GatewayFlowRule> rules = new HashSet<>();
+        rules.add(new GatewayFlowRule("echo_api")
+                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_CUSTOM_API_NAME)
+                .setCount(5)
+                .setIntervalSec(1)
+        );
+
+        rules.add(new GatewayFlowRule("divide_api")
+                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_CUSTOM_API_NAME)
+                .setCount(2)
+                .setIntervalSec(1)
+        );
+        GatewayRuleManager.loadRules(rules);
     }
 
     private void initClientConfigProperty() {
@@ -100,76 +144,5 @@ public class ClusterFlowRuleConfiguration {
         ClusterClientConfigManager.registerServerAssignProperty(clientAssignDs.getProperty());
     }
 
-//    private void initCustomizedApis() {
-//        Set<ApiDefinition> definitions = new HashSet<>();
-//        ApiDefinition api1 = new ApiDefinition("some_customized_api")
-//            .setPredicateItems(new HashSet<ApiPredicateItem>() {{
-//                add(new ApiPathPredicateItem().setPattern("/ahas"));
-//                add(new ApiPathPredicateItem().setPattern("/product/**")
-//                    .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
-//            }});
-//        ApiDefinition api2 = new ApiDefinition("another_customized_api")
-//            .setPredicateItems(new HashSet<ApiPredicateItem>() {{
-//                add(new ApiPathPredicateItem().setPattern("/**")
-//                    .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
-//            }});
-//        definitions.add(api1);
-//        definitions.add(api2);
-//        GatewayApiDefinitionManager.loadApiDefinitions(definitions);
-//    }
 
-//    private void initGatewayRules() {
-//        Set<GatewayFlowRule> rules = new HashSet<>();
-//        rules.add(new GatewayFlowRule("aliyun_route")
-//            .setCount(10)
-//            .setIntervalSec(1)
-//        );
-//        rules.add(new GatewayFlowRule("aliyun_route")
-//            .setCount(2)
-//            .setIntervalSec(2)
-//            .setBurst(2)
-//            .setParamItem(new GatewayParamFlowItem()
-//                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_CLIENT_IP)
-//            )
-//        );
-//        rules.add(new GatewayFlowRule("httpbin_route")
-//            .setCount(10)
-//            .setIntervalSec(1)
-//            .setControlBehavior(RuleConstant.CONTROL_BEHAVIOR_RATE_LIMITER)
-//            .setMaxQueueingTimeoutMs(600)
-//            .setParamItem(new GatewayParamFlowItem()
-//                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_HEADER)
-//                .setFieldName("X-Sentinel-Flag")
-//            )
-//        );
-//        rules.add(new GatewayFlowRule("httpbin_route")
-//            .setCount(1)
-//            .setIntervalSec(1)
-//            .setParamItem(new GatewayParamFlowItem()
-//                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_URL_PARAM)
-//                .setFieldName("pa")
-//            )
-//        );
-//        rules.add(new GatewayFlowRule("httpbin_route")
-//            .setCount(2)
-//            .setIntervalSec(30)
-//            .setParamItem(new GatewayParamFlowItem()
-//                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_URL_PARAM)
-//                .setFieldName("type")
-//                .setPattern("warn")
-//                .setMatchStrategy(SentinelGatewayConstants.PARAM_MATCH_STRATEGY_CONTAINS)
-//            )
-//        );
-//
-//        rules.add(new GatewayFlowRule("some_customized_api")
-//            .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_CUSTOM_API_NAME)
-//            .setCount(5)
-//            .setIntervalSec(1)
-//            .setParamItem(new GatewayParamFlowItem()
-//                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_URL_PARAM)
-//                .setFieldName("pn")
-//            )
-//        );
-//        GatewayRuleManager.loadRules(rules);
-//    }
 }
