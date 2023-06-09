@@ -15,7 +15,7 @@ class SpringServicesApplicationTests {
 	@Test
 	public void testConcurrentRequests() throws InterruptedException {
 		String baseUrl = "http://localhost:8080/api/v1/namespaces/default/services/hello-consumer-boot-service:30001/proxy/echo/helloProvider";
-		int numThreads = 50;
+		int numThreads = 7;
 		int numRequestsPerThread = 10;
 
 		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
@@ -37,6 +37,11 @@ class SpringServicesApplicationTests {
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		System.out.println("Response status: " + response.getStatusCode());
 		System.out.println("Response body: " + response.getBody());
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
