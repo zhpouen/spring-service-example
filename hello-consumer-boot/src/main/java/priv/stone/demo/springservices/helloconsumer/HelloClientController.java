@@ -42,7 +42,7 @@ public class HelloClientController {
     }
 
     @GetMapping("/divide")
-    @SentinelResource(value = "divide", blockHandler = "handleDivideBlock", fallback = "handleDivideDegrade", exceptionsToTrace = {RuntimeException.class, BlockException.class})
+    @SentinelResource(value = "divide", blockHandler = "handleDivideBlock", fallback = "handleDivideDegrade", exceptionsToTrace = {RuntimeException.class})
     public String divide(@RequestParam Integer a, @RequestParam Integer b) throws BlockException {
         if (RANDOM.nextInt(Integer.MAX_VALUE) % 3 == 1) {
            throw new RuntimeException("random exception");
