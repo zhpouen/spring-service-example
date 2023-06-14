@@ -75,4 +75,10 @@ class SpringServicesApplicationTests {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Test
+	public void test3() {
+		System.out.println(RuntimeException.class.isAssignableFrom(Throwable.class));
+		System.out.println(Throwable.class.isAssignableFrom(RuntimeException.class));
+	}
 }

@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import priv.stone.demo.springservices.helloprovider.api.HelloService;
 
+import java.util.Random;
+
 @RestController
 @Slf4j
 public class HelloClientController {
+    private static final Random RANDOM = new Random();
+
     @Autowired
     private HelloService helloService;
 
@@ -26,8 +30,8 @@ public class HelloClientController {
         return "Consumer Blocked for divide: " + a + " / " + b;
     }
 
-    private String handleDivideDegrade(Integer a, Integer b, BlockException ex) {
-        log.info("Consumer Degraded for divide", ex);
+    private String handleDivideDegrade(Integer a, Integer b, Throwable t) {
+        log.info("Consumer Degraded for divide", t);
         return "Consumer Degraded for divide: " + a + " / " + b;
     }
 
@@ -38,8 +42,11 @@ public class HelloClientController {
     }
 
     @GetMapping("/divide")
-    @SentinelResource(value = "divide", blockHandler = "handleDivideBlock", fallback = "handleDivideDegrade")
-    public String divide(@RequestParam Integer a, @RequestParam Integer b) {
+    @SentinelResource(value = "divide", blockHandler = "handleDivideBlock", fallback = "handleDivideDegrade", exceptionsToTrace = {RuntimeException.class, BlockException.class})
+    public String divide(@RequestParam Integer a, @RequestParam Integer b) throws BlockException {
+        if (RANDOM.nextInt(Integer.MAX_VALUE) % 3 == 1) {
+           throw new RuntimeException("random exception");
+        }
         return "consumer ==> " + helloService.divide(a, b);
     }
 
