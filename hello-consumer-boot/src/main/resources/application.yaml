@@ -22,3 +22,8 @@ management:
       health:
         show-details: ALWAYS
 
+logging:
+  level:
+    root: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}:%line - %msg%n"   # 控制台日志输出格式

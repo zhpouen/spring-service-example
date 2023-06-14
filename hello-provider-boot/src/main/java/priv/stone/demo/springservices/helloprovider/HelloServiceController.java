@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class HelloServiceController {
+    private static final Random RANDOM = new Random();
     @Resource
     private NacosDiscoveryProperties nacosDiscoveryProperties;
 
@@ -76,6 +78,15 @@ public class HelloServiceController {
     @GetMapping("/divide")
     @SentinelResource(value = "divide", blockHandler = "handleDivideBlock")
     public String divide(@RequestParam Integer a, @RequestParam Integer b) {
+        if (RANDOM.nextInt(Integer.MAX_VALUE) % 100 == 1) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return "-1";
+        }
+
         if (b == 0) {
             return String.valueOf(0);
         }

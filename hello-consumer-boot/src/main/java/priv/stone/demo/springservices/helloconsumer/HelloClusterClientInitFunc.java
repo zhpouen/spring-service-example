@@ -7,6 +7,8 @@ import com.alibaba.csp.sentinel.cluster.client.config.ClusterClientConfigManager
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.nacos.NacosDataSource;
 import com.alibaba.csp.sentinel.init.InitFunc;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.transport.config.TransportConfig;
@@ -23,6 +25,9 @@ public class HelloClusterClientInitFunc implements InitFunc {
 
     private final String flowDataId = "hello-consumer-flow-rules";
 //    private final String paramDataId = "PARAM_FLOW_RULE_DATA_ID";
+
+    private final String degradeDataId = "hello-consumer-degrade-rules";
+
     private final String configDataId = "hello_cluster_client_config_data_id";
 
     private final String clusterMapDataId = "hello_cluster_map_data_id";
@@ -48,6 +53,10 @@ public class HelloClusterClientInitFunc implements InitFunc {
 //        ReadableDataSource<String, List<ParamFlowRule>> paramRuleSource = new NacosDataSource<>(remoteAddress, groupId,
 //                paramDataId, source -> JSON.parseObject(source, new TypeReference<>() {}));
 //        ParamFlowRuleManager.register2Property(paramRuleSource.getProperty());
+
+        ReadableDataSource<String, List<DegradeRule>> degradeRuleSource = new NacosDataSource<>(remoteAddress, groupId,
+                degradeDataId, source -> JSON.parseObject(source, new TypeReference<>() {}));
+        DegradeRuleManager.register2Property(degradeRuleSource.getProperty());
     }
 
     private void initClientConfigProperty() {

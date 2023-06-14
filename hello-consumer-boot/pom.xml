@@ -85,7 +85,12 @@
             <artifactId>sentinel-annotation-aspectj</artifactId>
         </dependency>
 
-<!--        <dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
 <!--            <groupId>com.alibaba.csp</groupId>-->
 <!--            <artifactId>sentinel-datasource-converter</artifactId>-->
 <!--            <version>1.8.3</version>-->

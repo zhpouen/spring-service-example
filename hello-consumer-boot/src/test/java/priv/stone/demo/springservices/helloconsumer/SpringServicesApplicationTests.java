@@ -44,4 +44,35 @@ class SpringServicesApplicationTests {
 		}
 	}
 
+	@Test
+	public void testDivideRequests() throws InterruptedException {
+		String baseUrl = "http://localhost:8080/api/v1/namespaces/default/services/hello-consumer-boot-service:30001/proxy/divide?a=100&b=10";
+		int numThreads = 10;
+		int numRequestsPerThread = 10;
+
+		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+
+		for (int i = 0; i < numThreads; i++) {
+			executorService.submit(() -> {
+				for (int j = 0; j < numRequestsPerThread; j++) {
+					makeDivideRequest(baseUrl);
+				}
+			});
+		}
+
+		executorService.shutdown();
+		executorService.awaitTermination(10, TimeUnit.SECONDS);
+	}
+
+	private void makeDivideRequest(String url) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		System.out.println("Response status: " + response.getStatusCode());
+		System.out.println("Response body: " + response.getBody());
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
