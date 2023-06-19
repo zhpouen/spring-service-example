@@ -1,0 +1,28 @@
+server:
+  port: 30000
+
+spring:
+  application:
+    name: echo-provider-boot
+  cloud:
+    nacos:
+      config:
+        serverAddr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+  config:
+    import:
+      - nacos:echo-provider-boot.properties?refresh=true
+
+management:
+    endpoints:
+        web:
+        exposure:
+            include: '*'
+    endpoint:
+      health:
+        show-details: ALWAYS
+
+echo:
+  local: Hello Local Config
+  replace: ${echo.remote}

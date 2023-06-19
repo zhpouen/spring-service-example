@@ -27,6 +27,7 @@
         <module>hello-consumer-boot</module>
         <module>hello-gateway-boot</module>
         <module>hello-flowserver-boot</module>
+        <module>echo-provider-boot</module>
     </modules>
 
     <dependencyManagement>
